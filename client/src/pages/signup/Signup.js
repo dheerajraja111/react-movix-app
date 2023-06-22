@@ -13,7 +13,7 @@ const Signup = () => {
   const [signupSuccess, setSignupSuccess] = useState("");
 
   const api = axios.create({
-    baseURL: "http://localhost:4002",
+    baseURL: "https://movix-login-app.onrender.com",   // "http://localhost:4002"
   });
 
   const navigate = useNavigate();
