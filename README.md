@@ -19,3 +19,6 @@
 4.  App is deployed on netlify & rende.com. Please run below URL to check the app:
 
         https://dheerajmovixreactapp.netlify.app/
+
+        username: admin
+        password: admin
