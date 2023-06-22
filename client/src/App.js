@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { BrowserRouter, Route, Routes, Navigate, useNavigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate} from "react-router-dom";
 import "./App.scss";
 import { fetchDataFromAPI } from "./utils/api";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,10 +17,7 @@ import Signup from "./pages/signup/Signup";
 
 function App() {
   const dispatch = useDispatch();
-  const { url } = useSelector((state) => state.home);
-
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-
 
   useEffect(() => {
     if (isLoggedIn) {

@@ -4,8 +4,6 @@ const BASE_URL = 'https://api.themoviedb.org/3'
 
 const TMDB_TOKEN = process.env.REACT_APP_TMDB_TOKEN;
 
-// const TMDB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4ZDU3YTYzM2Y5ZmE1Mjk4OGEwZDBlYzEwOTkyNzE5NCIsInN1YiI6IjY0ODFkNmJjYmYzMWYyMDEzYWRjZmQxOCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.gmuL87ypeXZEn7_01TyYqiHSSGyLN2A3YPHXErDW1V0';
-
 const headers = {
     Authorization: 'bearer ' + TMDB_TOKEN
 };
