@@ -1,61 +1,54 @@
-import React from "react";
-import { render, fireEvent, waitFor, screen } from "@testing-library/react";
-import axios from "axios";
-import Signup from "./Signup";
+import 'core-js';
+import 'regenerator-runtime/runtime';
+import React from 'react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
+import axios from 'axios';
+import Signup from './Signup';
 
-jest.mock("axios");
+jest.mock('axios');
 
-describe("Signup", () => {
-  it("renders the Signup component correctly", () => {
-    const { getByLabelText, getByText } = render(<Signup />);
-    
-    // Test rendering of form elements
-    expect(screen.getByLabelText("Username:")).toBeInTheDocument();
-    expect(screen.getByLabelText("Password:")).toBeInTheDocument();
-    expect(screen.getByText("Signup")).toBeInTheDocument();
+describe('Signup component', () => {
+  test('should render signup form and handle successful signup', async () => {
+    const mockedApiResponse = { data: { message: 'User successfully registered' } };
+    axios.post.mockResolvedValue(mockedApiResponse);
+
+    render(<Signup />);
+
+    const usernameInput = screen.getByPlaceholderText('Set your username');
+    const passwordInput = screen.getByPlaceholderText('Set your password');
+    const signupButton = screen.getByText('Signup');
+
+    // Fill in the form
+    fireEvent.change(usernameInput, { target: { value: 'testuser' } });
+    fireEvent.change(passwordInput, { target: { value: 'testpassword' } });
+
+    // Click the signup button
+    fireEvent.click(signupButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('User successfully registered. Please login to continue!')).toBeInTheDocument();
+    });
   });
 
-  it("submits the signup form successfully", async () => {
-    const { getByLabelText, getByText, queryByText } = render(<Signup />);
-    
-    // Mock axios post request
-    axios.post.mockResolvedValueOnce({ data: {} });
+  test('should render signup form and handle signup error', async () => {
+    const mockedErrorResponse = { response: { data: { message: 'User already registered' } } };
+    axios.post.mockRejectedValue(mockedErrorResponse);
 
-    // Fill in form inputs
-    fireEvent.change(screen.getByLabelText("Username:"), { target: { value: "testuser" } });
-    fireEvent.change(screen.getByLabelText("Password:"), { target: { value: "testpassword" } });
+    render(<Signup />);
 
-    // Submit the form
-    fireEvent.click(screen.getByText("Signup"));
+    const usernameInput = screen.getByPlaceholderText('Set your username');
+    const passwordInput = screen.getByPlaceholderText('Set your password');
+    const signupButton = screen.getByText('Signup');
 
-    // Ensure the form validation errors are not displayed
+    // Fill in the form
+    fireEvent.change(usernameInput, { target: { value: 'testuser' } });
+    fireEvent.change(passwordInput, { target: { value: 'testpassword' } });
+
+    // Click the signup button
+    fireEvent.click(signupButton);
+
     await waitFor(() => {
-      expect(screen.queryByText("Please set your username")).toBeNull();
+      expect(screen.getByText('User already registered')).toBeInTheDocument();
     });
-
-    // Ensure the signup success message is displayed
-    expect(screen.getByText("User successfully registered. Please login to continue!")).toBeInTheDocument();
-  });
-
-  it("displays error message on signup failure", async () => {
-    const { getByLabelText, getByText, queryByText } = render(<Signup />);
-    
-    // Mock axios post request to simulate signup failure
-    axios.post.mockRejectedValueOnce(new Error("User already registered"));
-
-    // Fill in form inputs
-    fireEvent.change(screen.getByLabelText("Username:"), { target: { value: "existinguser" } });
-    fireEvent.change(screen.getByLabelText("Password:"), { target: { value: "testpassword" } });
-
-    // Submit the form
-    fireEvent.click(screen.getByText("Signup"));
-
-    // Ensure the form validation errors are not displayed
-    await waitFor(() => {
-      expect(screen.queryByText("Please set your username")).toBeNull();
-    });
-
-    // Ensure the signup error message is displayed
-    expect(screen.getByText("User already registered")).toBeInTheDocument();
   });
 });
